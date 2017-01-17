@@ -10,10 +10,60 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117115335) do
+ActiveRecord::Schema.define(version: 20170117125436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "agents", force: :cascade do |t|
+    t.string   "firstname"
+    t.string   "lastname"
+    t.text     "email"
+    t.text     "password"
+    t.text     "telephone"
+    t.boolean  "isadmin"
+    t.integer  "branch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_agents_on_branch_id", using: :btree
+  end
+
+  create_table "branches", force: :cascade do |t|
+    t.string   "name"
+    t.text     "location"
+    t.text     "address"
+    t.string   "email"
+    t.string   "telephone"
+    t.integer  "store_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_branches_on_store_id", using: :btree
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "quantity"
+    t.text     "code"
+    t.integer  "price"
+    t.integer  "branch_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["branch_id"], name: "index_products_on_branch_id", using: :btree
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.datetime "purchasedate"
+    t.integer  "quantity"
+    t.integer  "branch_id"
+    t.integer  "product_id"
+    t.integer  "agent_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["agent_id"], name: "index_sales_on_agent_id", using: :btree
+    t.index ["branch_id"], name: "index_sales_on_branch_id", using: :btree
+    t.index ["product_id"], name: "index_sales_on_product_id", using: :btree
+  end
 
   create_table "stores", force: :cascade do |t|
     t.text     "name"
@@ -26,4 +76,10 @@ ActiveRecord::Schema.define(version: 20170117115335) do
     t.string   "api_key"
   end
 
+  add_foreign_key "agents", "branches"
+  add_foreign_key "branches", "stores"
+  add_foreign_key "products", "branches"
+  add_foreign_key "sales", "agents"
+  add_foreign_key "sales", "branches"
+  add_foreign_key "sales", "products"
 end
