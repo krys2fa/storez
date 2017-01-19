@@ -46,6 +46,7 @@ class BranchesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def branch_params
-      params.fetch(:branch, {})
+      # params.fetch(:branch, {})
+      params.permit(:email, :location, :name, :address, :telephone, :store_id)
     end
 end
