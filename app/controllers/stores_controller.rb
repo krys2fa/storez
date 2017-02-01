@@ -5,7 +5,9 @@ class StoresController < ApplicationController
   def index
     @stores = Store.all
 
-    render json: @stores
+    # render json: @stores
+
+    render :json => @stores
   end
 
   # GET /stores/1
